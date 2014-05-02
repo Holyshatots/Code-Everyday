@@ -17,61 +17,56 @@
 #define START_MIN -1000
 #define END_MAX 1000
 
-void ErrorHandler(int ErrCode){
-	//Takes an error code and prints out the appropriate error message
-switch (ErrCode) {
-		case 1:
-			puts("Usage: ./tempconverter StartTemp EndTemp StepSize");
-			break;
-		case 2:
-			puts("StartTemp too low");
-			break;
-		case 3:
-			puts("EndTemp too high");
-			break;
-		case 4:
-			puts("StartTemp higher than EndTemp");
-			break;
-		case 5:
-			puts("Step Size greater than difference in temperatures!");
-			break;
-		default:
-			puts("Error!");
-			break;
-	}	
-	}
+void getInputs(int *StartTemp, int *EndTemp, int *StepSize){
+// If nothing is specified, allow inputs to be passed in during execution
+	printf("Enter starting temperature:");
+	scanf("%d", StartTemp);
+	printf("Enter ending temperature:");
+	scanf("%d", EndTemp);
+	printf("Enter step size:");
+	scanf("%d", StepSize);
+	return;
+}
+
 int main(int argc, char *argv[]){
-	long int StartTemp, EndTemp, StepSize;
+	int StartTemp, EndTemp, StepSize;
 	float currentC, currentF;
 	int count = 0;
-		
-	if (argc != 4){
-		ErrorHandler(1);
+	
+//If nothing is specified, prompt for inputs 
+	if (argc == 1){
+		getInputs(&StartTemp, &EndTemp, &StepSize);
+	} else if (argc != 4){ 
+		puts("Usage: ./tempconverter StartTemp EndTemp StepSize"); //If only partial options, display usage
 		return 1;
-	}	
-	
-	StartTemp = atoi(argv[1]);
-	EndTemp = atoi(argv[2]);
-	StepSize = atoi(argv[3]);
-	
+	} else {
+	// If correct number of args, set them
+		StartTemp = atoi(argv[1]);
+		EndTemp = atoi(argv[2]);
+		StepSize = atoi(argv[3]);
+	}
 	// Check bounds of input
 	// Check if Start Temp is above min
 	if (StartTemp < START_MIN){
-		ErrorHandler(2);
+		puts("StartTemp too low");
 		return 1;
 	} 
 	// Check if End Temp is lower than max
 	if (EndTemp > END_MAX){
-		ErrorHandler(3);
+		puts("EndTemp too high");
 		return 1;
 	}
 	// Check if Start Temp is smaller than End temp
 	if (StartTemp > EndTemp){
-		ErrorHandler(4);
+		puts("StartTemp higher than EndTemp");
+		return 1;
+	}
+	if (StepSize == 0)}
+		printf("Step size cannot be 0\n");
 		return 1;
 	}
 	if ((StartTemp - EndTemp) > StepSize){
-		ErrorHandler(5);
+		puts("Step Size greater than difference in temperatures!");
 		return 1;
 	}
 	
