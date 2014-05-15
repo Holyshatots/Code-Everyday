@@ -1,0 +1,39 @@
+#!/bin/bash
+
+#Displays the raspberry pi's temperature read from "/sys/class/thermal/thermal_zone0/temp"
+#Format:
+#	temperature [(?)r] [time(seconds)]
+#	If r is specified 
+
+if [ "$1" == "r" ] && [ "$2" -gt 0 ]; then
+ 
+	while [[ 1 -eq 1 ]]
+	do
+		temp=$(cat /sys/class/thermal/thermal_zone0/temp)
+		a=${temp:0:2}
+		b=${temp:2:3}
+		echo "$a.$b C"
+		high=$(cat /home/myscripts/highesttemp)		
+		if [ "$high" -lt "$temp" ]; then
+			echo "$temp" > '/home/myscripts/highesttemp'
+			echo "$a.$b C is the highest temperature recorded!"
+		fi
+		sleep $2
+	done
+elif [ -z $1 ]
+then
+	temp=$(cat /sys/class/thermal/thermal_zone0/temp)
+	a=${temp:0:2}
+	b=${temp:2:3}
+	echo "$a.$b C"
+	c=$(expr 85 - $a)
+	echo "$c.$b C left until overheat"
+	high=$(cat /home/myscripts/highesttemp)
+	if [ "$high" -lt "$temp" ]; then
+		echo "$temp" > '/home/myscripts/highesttemp'
+		echo "$a.$b C is the highest temperature recorded!"
+	fi
+else
+	echo "Format: temperature [r] [time]."
+	echo "Use r if a loop is wanted."	
+fi

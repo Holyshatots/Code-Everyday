@@ -1,0 +1,4 @@
+read failed: Network is down
+wi_read(): Invalid argument
+write failed: No such device or address
+wi_write(): No such device or address
