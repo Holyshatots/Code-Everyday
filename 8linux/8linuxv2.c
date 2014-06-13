@@ -10,6 +10,9 @@ Basic program that will download playlists from 8tracks
 * Usage: pass in a path to a playlist like: 
 * http://8tracks.com/dp/electrominimalicious
 * and it will download all of the songs into a folder in ~/Music/8Linux/playlistname
+* compiled with: 
+* `curl-config --cc --cflags` -o 8linuxv2 8linuxv2.c `curl-config --libs` -ljansson 
+
 */
 
 #include <stdio.h>
@@ -18,6 +21,8 @@ Basic program that will download playlists from 8tracks
 #include <fcntl.h>
 #include <errno.h>
 #include <unistd.h>
+#include <sys/types.h>
+#include <sys/stat.h>
 
 #include <jansson.h>
 #include <curl/curl.h>
@@ -114,20 +119,26 @@ error:
 
 int main(int argc, char *argv[]){
 	char url[URL_SIZE];
-	size_t i;
-	char *text, *text2;
-	char buf[80];
+	char *text;
+	// char buf[80];
 	const char *message;
+	char *message2;
+	char  *file = "/.8tracks";
+	char *filename;
 	
+	filename = getenv("HOME");
+	
+	filename = strcat(filename, file);
+	// printf("Play token file: %s\n", filename);
 	int id;
 	int playToken = 0;
 	
 	int in_file;
 	FILE *in_file2;
 	
-	json_t *root, *root2;
+	json_t *root;
 	json_error_t error;
-	json_t *data, *mix, *jsonid;
+	json_t  *mix, *jsonid;
 	json_t *jsonplayToken;
 	
 	// Check usage
@@ -135,7 +146,7 @@ int main(int argc, char *argv[]){
 		puts("Usage: ./8linux http://8tracks.com/user/playlist\n");
 		return 0;
 	}
-
+	
 	// Append .json to the url
 	strcpy(url, argv[1]);
 	strcat(url, ".json"); 
@@ -180,42 +191,51 @@ int main(int argc, char *argv[]){
 	// curl http://8tracks.com/sets/new.json
 	// Create a new document ~/.8linux with the play token
 	// if it doesn't exist generate a new one
-	in_file = open("~/.8linux", O_CREAT | O_WRONLY);
+	
+	in_file = open(filename, O_CREAT | O_WRONLY | O_EXCL, S_IRUSR | S_IWUSR);
 	if (in_file < 0) {
 		/* failure */
 		if (errno == EEXIST) {
 			/* the file already existed */
 			// Load previously created token
-		
+			printf("~/.8linux exists.\n");
+			in_file2 = fopen(filename, "r");
+			fread(message2, 1, 9, in_file2);
+			// printf("%s\n", message2);
+			playToken = atoi(message2);
+			fclose(in_file2);
 		}
 	} else {
 		/* now you can use the file */
 		// Get token
-		text2 = request("http://8tracks.com/sets/new.json");
-		if(!text2)
-		return 1;
-		root2 = json_loads(text2, 0, &error);
-		if(!root2) {
-			fprintf(stderr, "error: on line %d: %s\n", error.line, error.text);
-			return 1;
-		}
-		free(text2);
-		jsonplayToken = json_object_get(root2, "play_token");
-		if(!json_is_string(jsonplayToken)) {
-			fprintf(stderr, "error: playToken is not an integer\n");
-			json_decref(root2);
-			return 1;
-		}
-		message = json_string_value(jsonplayToken);
-		playToken = atoi(message);
-		json_decref(root2);
-		if(write(in_file, message, sizeof(message)) !=  sizeof(message)){
-			fprintf(stderr, "error: writing to ~/.8linux failed");
-		}
 		if(close(in_file) < 0){
 			fprintf(stderr, "error: failed to close ~/.8linux");
 			return 1;
 		}
+		in_file2 = fopen(filename, "w");
+		text = request("http://8tracks.com/sets/new.json");
+		if(!text) {
+			return 1;
+		}	
+		root = json_loads(text, 0, &error);
+		if(!root) {
+			fprintf(stderr, "error: on line %d: %s\n", error.line, error.text);
+			return 1;
+		}
+		free(text);
+		jsonplayToken = json_object_get(root, "play_token");
+		if(!json_is_string(jsonplayToken)) {
+			fprintf(stderr, "error: playToken is not a string\n");
+			json_decref(root);
+			return 1;
+		}
+		message = json_string_value(jsonplayToken);
+		playToken = atoi(message);
+		printf("Writing: %s\n", message);
+		fwrite(message, 1, sizeof(message)+1 , in_file2);
+		fclose(in_file2);
+		json_decref(root);
+		
 	}	
 	printf("Play token: %d\n", playToken);
 	
@@ -239,3 +259,4 @@ int main(int argc, char *argv[]){
 }
 
 // curl --header "X-Api-Key: faeab0bca799a7af3c21d9e3d3a88b4b28dc30df" http://8tracks.com/musicbeats/programming.json
+// curl --header "X-Api-Key: faeab0bca799a7af3c21d9e3d3a88b4b28dc30df" http://8tracks.com/sets/new.json
