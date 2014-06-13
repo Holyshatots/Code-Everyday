@@ -17,6 +17,7 @@ Basic program that will download playlists from 8tracks
 #include <string.h>
 #include <fcntl.h>
 #include <errno.h>
+#include <unistd.h>
 
 #include <jansson.h>
 #include <curl/curl.h>
@@ -46,7 +47,6 @@ static size_t write_response(void *ptr, size_t size, size_t nmemb, void *stream)
 
     return size * nmemb;
 }
-
 
 static char *request(const char *url) {
     CURL *curl = NULL;
@@ -115,15 +115,20 @@ error:
 int main(int argc, char *argv[]){
 	char url[URL_SIZE];
 	size_t i;
-	char *text;
+	char *text, *text2;
+	char buf[80];
+	const char *message;
 	
 	int id;
-	int playToken;
+	int playToken = 0;
 	
-	FILE *in_file;
+	int in_file;
+	FILE *in_file2;
 	
-	json_t *root;
+	json_t *root, *root2;
 	json_error_t error;
+	json_t *data, *mix, *jsonid;
+	json_t *jsonplayToken;
 	
 	// Check usage
 	if (argc != 2){
@@ -150,9 +155,6 @@ int main(int argc, char *argv[]){
 		return 1;
 	}
 	
-	json_t *data, *mix, *jsonid;
-	// json_int_t id;
-	
 	// Check the types of the json document	
 	mix = json_object_get(root, "mix");
 	if(!json_is_object(mix)){
@@ -178,23 +180,45 @@ int main(int argc, char *argv[]){
 	// curl http://8tracks.com/sets/new.json
 	// Create a new document ~/.8linux with the play token
 	// if it doesn't exist generate a new one
-	/*
-	
-	if(file_exist("~/.8linux")) {
-		// Load previously created token
-		in_file = fopen("~/.8linux", "r");
-		fgets(buf, 20, in_file);
-		playToken = atoi(buf);
-		fclose(in_file);
-	} else {
-		// Get token
-		text = request("http://8tracks.com/sets/new.xml");
-		root = json_loads(text, 0, &error);
-		free(text);
+	in_file = open("~/.8linux", O_CREAT | O_WRONLY);
+	if (in_file < 0) {
+		/* failure */
+		if (errno == EEXIST) {
+			/* the file already existed */
+			// Load previously created token
 		
-	}
+		}
+	} else {
+		/* now you can use the file */
+		// Get token
+		text2 = request("http://8tracks.com/sets/new.json");
+		if(!text2)
+		return 1;
+		root2 = json_loads(text2, 0, &error);
+		if(!root2) {
+			fprintf(stderr, "error: on line %d: %s\n", error.line, error.text);
+			return 1;
+		}
+		free(text2);
+		jsonplayToken = json_object_get(root2, "play_token");
+		if(!json_is_string(jsonplayToken)) {
+			fprintf(stderr, "error: playToken is not an integer\n");
+			json_decref(root2);
+			return 1;
+		}
+		message = json_string_value(jsonplayToken);
+		playToken = atoi(message);
+		json_decref(root2);
+		if(write(in_file, message, sizeof(message)) !=  sizeof(message)){
+			fprintf(stderr, "error: writing to ~/.8linux failed");
+		}
+		if(close(in_file) < 0){
+			fprintf(stderr, "error: failed to close ~/.8linux");
+			return 1;
+		}
+	}	
 	printf("Play token: %d\n", playToken);
-	*/
+	
 	// Select the mix for play back
 	// http://8tracks.com/sets/111696185/play.xml?mix_id=14
 	

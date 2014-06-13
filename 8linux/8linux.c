@@ -119,7 +119,7 @@ int main(int argc, char *argv[]){
 	
 	// Append .json to the url
 	strcpy(url, argv[1]);
-	strcat(url, ".json"); 
+	strcat(url, ".xml"); 
 
 	curl_global_init(CURL_GLOBAL_ALL);
 	
@@ -168,7 +168,7 @@ int main(int argc, char *argv[]){
 	// curl http://8tracks.com/sets/new.json
 	// Create a new document ~/.8linux with the play token
 	// if it doesn't exist generate a new one
-	curl_easy_setopt(curl_handle, CURLOPT_URL, "http://8tracks.com/sets/new.json");
+	curl_easy_setopt(curl_handle, CURLOPT_URL, "http://8tracks.com/sets/new.xml");
 	free(chunk.memory);
 	chunk.memory = malloc(1); // Only allocate a little but it will allocate more later
 	chunk.size = 0;
@@ -200,6 +200,8 @@ int main(int argc, char *argv[]){
 	// Call next
 	// curl http://8tracks.com/sets/111696185/next.json?mix_id=14
 	
+	
+	free(chunk.memory);
 	xmlCleanupParser(); // Clean up libxml
 	curl_slist_free_all(slist); // Free the header list
 	curl_easy_cleanup(curl_handle);
