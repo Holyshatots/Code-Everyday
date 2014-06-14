@@ -38,6 +38,14 @@ struct write_result {
     int pos;
 };
 
+struct track {
+	json_t *jsontrackname, *jsonartist, *jsonstreamURL;
+	const char *trackname;
+	const char *artist;
+	const char *streamURL;
+	char *filename;
+};
+
 static size_t write_response(void *ptr, size_t size, size_t nmemb, void *stream) {
     struct write_result *result = (struct write_result *)stream;
 
@@ -78,7 +86,8 @@ static char *request(const char *url) {
 
     headers = curl_slist_append(headers, "X-Api-Key: faeab0bca799a7af3c21d9e3d3a88b4b28dc30df");
     curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
-
+	//curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, headers);
+	
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_response);
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, &write_result);
 
@@ -117,12 +126,50 @@ error:
     return NULL;
 }
 
+static size_t write_file(void *ptr, size_t size, size_t nmemb, void *stream) {
+	int written = fwrite(ptr, size, nmemb, (FILE *)stream);
+	return written;
+}
+
+int request_to_file(const char *url, const char *filename) {
+	FILE *fp;
+	CURL *curl_handle;
+	CURLcode res;
+	curl_global_init(CURL_GLOBAL_ALL);
+	curl_handle = curl_easy_init();
+	if(!curl_handle){
+		fprintf(stderr, "Could not get curl handle");
+		curl_global_cleanup();
+		return 1;
+	}
+	curl_easy_setopt(curl_handle, CURLOPT_URL, url);
+	curl_easy_setopt(curl_handle, CURLOPT_WRITEFUNCTION, write_file);
+	curl_easy_setopt(curl_handle, CURLOPT_FOLLOWLOCATION, 1L);
+	fp = fopen(filename, "wb");
+	if (fp == NULL) {
+		curl_easy_cleanup(curl_handle);
+		fprintf(stderr, "Could not open %s", filename);
+		return 2;
+	}
+	curl_easy_setopt(curl_handle, CURLOPT_WRITEDATA, fp);
+	printf("Downloading: %s ...", filename);
+	res = curl_easy_perform(curl_handle);
+	if(res != CURLE_OK){
+		fprintf(stderr, "curl failed: %s\n", curl_easy_strerror(res));
+		return 3;
+	}
+	printf(" Done!\n");
+	fclose(fp);
+	curl_easy_cleanup(curl_handle);
+	return 0;
+}
+
 int main(int argc, char *argv[]){
 	char url[URL_SIZE];
 	char *text;
 	// char buf[80];
 	const char *message;
-	char *message2;
+	char message2[100] = {0};
 	char  *file = "/.8tracks";
 	char *filename;
 	
@@ -130,16 +177,20 @@ int main(int argc, char *argv[]){
 	
 	filename = strcat(filename, file);
 	// printf("Play token file: %s\n", filename);
+	
+	char selectURL[1000] = {0};
+	
 	int id;
 	int playToken = 0;
 	
-	int in_file;
+	// int in_file;
 	FILE *in_file2;
 	
 	json_t *root;
 	json_error_t error;
 	json_t  *mix, *jsonid;
 	json_t *jsonplayToken;
+	json_t *jsonset, *jsontrack;
 	
 	// Check usage
 	if (argc != 2){
@@ -192,27 +243,15 @@ int main(int argc, char *argv[]){
 	// Create a new document ~/.8linux with the play token
 	// if it doesn't exist generate a new one
 	
-	in_file = open(filename, O_CREAT | O_WRONLY | O_EXCL, S_IRUSR | S_IWUSR);
-	if (in_file < 0) {
-		/* failure */
-		if (errno == EEXIST) {
-			/* the file already existed */
-			// Load previously created token
-			printf("~/.8linux exists.\n");
-			in_file2 = fopen(filename, "r");
-			fread(message2, 1, 9, in_file2);
-			// printf("%s\n", message2);
-			playToken = atoi(message2);
-			fclose(in_file2);
-		}
-	} else {
+	in_file2 = fopen(filename, "r");
+	if (in_file2 == NULL) {
 		/* now you can use the file */
 		// Get token
-		if(close(in_file) < 0){
-			fprintf(stderr, "error: failed to close ~/.8linux");
-			return 1;
-		}
+		printf("~/.8linux doesn't exist.\n");
 		in_file2 = fopen(filename, "w");
+		if(in_file2 == NULL){
+			printf("Could not create ~/.8linux");
+		}
 		text = request("http://8tracks.com/sets/new.json");
 		if(!text) {
 			return 1;
@@ -235,25 +274,71 @@ int main(int argc, char *argv[]){
 		fwrite(message, 1, sizeof(message)+1 , in_file2);
 		fclose(in_file2);
 		json_decref(root);
-		
+	} else {
+		/* the file already existed */
+		// Load previously created token
+		printf("~/.8linux exists.\n");
+		fread(message2, sizeof(int), 15, in_file2);
+		playToken = atoi(message2);
+		fclose(in_file2);
 	}	
 	printf("Play token: %d\n", playToken);
+	snprintf(selectURL, 999, "http://8tracks.com/sets/%d/play.json?mix_id=%d", playToken, id);
 	
 	// Select the mix for play back
-	// http://8tracks.com/sets/111696185/play.xml?mix_id=14
+	// http://8tracks.com/sets/111696185/play.json?mix_id=14
 	
+	printf("%s\n", selectURL);
+	text = request(selectURL);
+	if(!text){
+		return 1;
+	}
+	root = json_loads(text, 0, &error);
+	if(!root) {
+		fprintf(stderr, "error: on line %d: %s\n", error.line, error.text);
+		return 1;
+	}
+	jsonset = json_object_get(root, "set");
+	if(!json_is_object(jsonset)) {
+		fprintf(stderr, "error: playset is not a object\n");
+		json_decref(root);
+		return 1;
+	}
+	jsontrack = json_object_get(jsonset, "track");
+	if(!json_is_object(jsonset)) {
+		fprintf(stderr, "error: playset is not a object\n");
+		json_decref(root);
+		return 1;
+	}	
+	struct track song;
+	song.jsonartist = json_object_get(jsontrack, "performer");
+	song.artist = json_string_value(song.jsonartist);
+	printf("Artist: %s\t\t", song.artist);
+	song.jsontrackname = json_object_get(jsontrack, "name");
+	song.trackname = json_string_value(song.jsontrackname);
+	printf("Track: %s\t\t\n", song.trackname);
+	song.jsonstreamURL = json_object_get(jsontrack, "url");
+	song.streamURL = json_string_value(song.jsonstreamURL);
+	printf("StreamURL = %s\n", song.streamURL);
 	
-	// Download the track_file_stream_url and set the appropriate elements
-	// according to the xml elements
-	// curl http://8tracks.com/sets/111696185/play.xml?mix_id=14
+	// Set the filename to the format artist - trackname.mp3
+	sprintf(song.filename, "%s - %s.mp3", song.artist, song.trackname);
+	
+	// Download the file
+	// TODO: set mp3 id3 tags
+	
+	if(request_to_file(song.streamURL, song.filename) != 0){
+		fprintf(stderr, "Downloading %s failed.", song.filename);
+	}
 	
 	
 	// Report a "performance"
-	// curl http://8tracks.com/sets/111696185/report.xml?track_id=[track_id]&mix_id=[mix_id]
+	// curl http://8tracks.com/sets/111696185/report.json?track_id=[track_id]&mix_id=[mix_id]
 	
 	
 	// Call next
-	// curl http://8tracks.com/sets/111696185/next.xml?mix_id=14
+	// curl http://8tracks.com/sdets/111696185/next.json?mix_id=14
+	
 	
 	return 0;
 }
