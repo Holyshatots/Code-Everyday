@@ -1,4 +1,5 @@
 /* Mitch McAffee
+ * themcaffee@gmail.com
  ***************************************************
 8Linux
 API KEY: faeab0bca799a7af3c21d9e3d3a88b4b28dc30df
@@ -39,11 +40,14 @@ struct write_result {
 };
 
 struct track {
-	json_t *jsontrackname, *jsonartist, *jsonstreamURL;
+	json_t *jsontrackname, *jsonartist, *jsonstreamURL, *jsonid, *jsonat_beginning, *jsonat_last_track;
 	const char *trackname;
 	const char *artist;
 	const char *streamURL;
-	char *filename;
+	char filename[1000];
+	int id;
+	int at_beginning; //True if at the first track in the mix
+	int at_last_track; //True if at the last track in the mix
 };
 
 static size_t write_response(void *ptr, size_t size, size_t nmemb, void *stream) {
@@ -167,11 +171,11 @@ int request_to_file(const char *url, const char *filename) {
 int main(int argc, char *argv[]){
 	char url[URL_SIZE];
 	char *text;
-	// char buf[80];
 	const char *message;
 	char message2[100] = {0};
 	char  *file = "/.8tracks";
 	char *filename;
+	char *home;
 	
 	filename = getenv("HOME");
 	
@@ -179,18 +183,22 @@ int main(int argc, char *argv[]){
 	// printf("Play token file: %s\n", filename);
 	
 	char selectURL[1000] = {0};
+	char selectURL2[1000] = {0};
 	
 	int id;
+	int trackCount = 0;
 	int playToken = 0;
 	
-	// int in_file;
 	FILE *in_file2;
 	
 	json_t *root;
 	json_error_t error;
-	json_t  *mix, *jsonid;
+	json_t  *mix, *jsonid, *jsontrackCount;
 	json_t *jsonplayToken;
 	json_t *jsonset, *jsontrack;
+	
+	int first = 1;
+	int at_last_track;
 	
 	// Check usage
 	if (argc != 2){
@@ -230,11 +238,21 @@ int main(int argc, char *argv[]){
 		json_decref(root);
 		return 1;
 	}
+	jsontrackCount = json_object_get(mix, "tracks_count");
+	if(!json_is_integer(jsontrackCount)) {
+		fprintf(stderr, "error: trackCount is not an integer\n");
+		json_decref(root);
+		return 1;
+	}
+	trackCount = json_integer_value(jsontrackCount);
+	if(trackCount == 0){
+		fprintf(stderr, "error: unable to get track count");
+	}
 	
 	// Set the mix id
 	id = json_integer_value(jsonid);
 	printf("Mix ID: %d\n", id);
-	
+	printf("Number of tracks: %d\n", trackCount);
 	// Free the document
 	json_decref(root);
 	
@@ -288,58 +306,77 @@ int main(int argc, char *argv[]){
 	// Select the mix for play back
 	// http://8tracks.com/sets/111696185/play.json?mix_id=14
 	
-	printf("%s\n", selectURL);
-	text = request(selectURL);
-	if(!text){
-		return 1;
-	}
-	root = json_loads(text, 0, &error);
-	if(!root) {
-		fprintf(stderr, "error: on line %d: %s\n", error.line, error.text);
-		return 1;
-	}
-	jsonset = json_object_get(root, "set");
-	if(!json_is_object(jsonset)) {
-		fprintf(stderr, "error: playset is not a object\n");
-		json_decref(root);
-		return 1;
-	}
-	jsontrack = json_object_get(jsonset, "track");
-	if(!json_is_object(jsonset)) {
-		fprintf(stderr, "error: playset is not a object\n");
-		json_decref(root);
-		return 1;
-	}	
-	struct track song;
-	song.jsonartist = json_object_get(jsontrack, "performer");
-	song.artist = json_string_value(song.jsonartist);
-	printf("Artist: %s\t\t", song.artist);
-	song.jsontrackname = json_object_get(jsontrack, "name");
-	song.trackname = json_string_value(song.jsontrackname);
-	printf("Track: %s\t\t\n", song.trackname);
-	song.jsonstreamURL = json_object_get(jsontrack, "url");
-	song.streamURL = json_string_value(song.jsonstreamURL);
-	printf("StreamURL = %s\n", song.streamURL);
+	do {
+		if(!first){
+			snprintf(selectURL, 999, "http://8tracks.com/sets/%d/next.json?mix_id=%d", playToken, id); 
+		}
+
+		printf("%s\n", selectURL);
+		text = request(selectURL);
+		if(!text){
+			return 1;
+		}
+		root = json_loads(text, 0, &error);
+		if(!root) {
+			fprintf(stderr, "error: on line %d: %s\n", error.line, error.text);
+			return 1;
+		}
+		free(text);
+		jsonset = json_object_get(root, "set");
+		if(!json_is_object(jsonset)) {
+			fprintf(stderr, "error: playset is not a object\n");
+			json_decref(root);
+			return 1;
+		}
+		jsontrack = json_object_get(jsonset, "track");
+		if(!json_is_object(jsonset)) {
+			fprintf(stderr, "error: playset is not a object\n");
+			json_decref(root);
+			return 1;
+		}	
+		struct track song;
+		song.jsonartist = json_object_get(jsontrack, "performer");
+		song.artist = json_string_value(song.jsonartist);
+		printf("Artist: %s\t\t", song.artist);
+		song.jsontrackname = json_object_get(jsontrack, "name");
+		song.trackname = json_string_value(song.jsontrackname);
+		printf("Track: %s\t\t", song.trackname);
+		song.jsonid = json_object_get(jsontrack, "id");
+		song.id = json_integer_value(song.jsonid);
+		printf("Song ID: %d\t\t\n", song.id);
+//		song.jsonat_beginning = json_object_get(jsontrack, "at_beginning");
+//		song.at_beginning = json_is_true(song.jsonat_beginning);
+//		printf("At beginning: %d\n", song.at_beginning);
+		song.jsonat_last_track = json_object_get(jsontrack, "at_last_track");
+		song.at_last_track = json_is_true(song.jsonat_last_track);
+		printf("At end: %d\n", song.at_last_track);
+		song.jsonstreamURL = json_object_get(jsontrack, "url");
+		song.streamURL = json_string_value(song.jsonstreamURL);
+		printf("StreamURL: %s\n", song.streamURL);
 	
-	// Set the filename to the format artist - trackname.mp3
-	sprintf(song.filename, "%s - %s.mp3", song.artist, song.trackname);
-	
-	// Download the file
-	// TODO: set mp3 id3 tags
-	
-	if(request_to_file(song.streamURL, song.filename) != 0){
-		fprintf(stderr, "Downloading %s failed.", song.filename);
-	}
-	
-	
-	// Report a "performance"
-	// curl http://8tracks.com/sets/111696185/report.json?track_id=[track_id]&mix_id=[mix_id]
-	
-	
-	// Call next
-	// curl http://8tracks.com/sdets/111696185/next.json?mix_id=14
-	
-	
+		// Set the filename to the format artist - trackname.mp3
+		// TODO: Download files to a file in ~/8linux/playlist/
+		// TODO: Get cover art for the playlist as well
+		snprintf(song.filename, 999, "%s - %s.mp3", song.artist, song.trackname);
+		
+		// Download the file
+		// TODO: set mp3 id3 tags
+		if(request_to_file(song.streamURL, song.filename) != 0){
+			fprintf(stderr, "Downloading %s failed.", song.filename);
+		}
+		
+		// Report a "performance"
+		// curl http://8tracks.com/sets/111696185/report.json?track_id=[track_id]&mix_id=[mix_id]
+		snprintf(selectURL, 999, "http://8tracks.com/sets/%d/report.json?track_id=%d&mix_id=%d", playToken, song.id, id); 
+		printf("Waiting to report a performance: 1min\n");
+		sleep(60); //60s
+		text = request(selectURL); // Report a performance
+		first = 0; //Not a pretty way of handling it but oh well
+		// at_last_track = song.at_last_track; // Same as above
+		at_last_track = song.at_last_track;
+	} while (!at_last_track);
+
+	printf("All done!.");
 	return 0;
 }
 
