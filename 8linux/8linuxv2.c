@@ -142,7 +142,7 @@ int request_to_file(const char *url, const char *filename) {
 	curl_global_init(CURL_GLOBAL_ALL);
 	curl_handle = curl_easy_init();
 	if(!curl_handle){
-		fprintf(stderr, "Could not get curl handle");
+		fprintf(stderr, "Could not get curl handle\n");
 		curl_global_cleanup();
 		return 1;
 	}
@@ -152,7 +152,7 @@ int request_to_file(const char *url, const char *filename) {
 	fp = fopen(filename, "wb");
 	if (fp == NULL) {
 		curl_easy_cleanup(curl_handle);
-		fprintf(stderr, "Could not open %s", filename);
+		fprintf(stderr, "Could not open %s\n", filename);
 		return 2;
 	}
 	curl_easy_setopt(curl_handle, CURLOPT_WRITEDATA, fp);
@@ -176,8 +176,10 @@ int main(int argc, char *argv[]){
 	char  *file = "/.8tracks";
 	char *filename;
 	char *home;
+	const char *mixName;
 	
-	filename = getenv("HOME");
+	home = getenv("HOME"); // Have to do this because strcpy was giving me 
+	filename = getenv("HOME"); // grief
 	
 	filename = strcat(filename, file);
 	// printf("Play token file: %s\n", filename);
@@ -193,7 +195,7 @@ int main(int argc, char *argv[]){
 	
 	json_t *root;
 	json_error_t error;
-	json_t  *mix, *jsonid, *jsontrackCount;
+	json_t  *mix, *jsonid, *jsontrackCount, *jsonmixName;
 	json_t *jsonplayToken;
 	json_t *jsonset, *jsontrack;
 	
@@ -248,7 +250,14 @@ int main(int argc, char *argv[]){
 	if(trackCount == 0){
 		fprintf(stderr, "error: unable to get track count");
 	}
-	
+	jsonmixName = json_object_get(mix, "name");
+	if(!json_is_string(jsonmixName)) {
+		fprintf(stderr, "error: mixName is not a string\n");
+		json_decref(root);
+		return 1;
+	}
+	mixName = json_string_value(jsonmixName);
+	printf("Mix name: %s\n", mixName);
 	// Set the mix id
 	id = json_integer_value(jsonid);
 	printf("Mix ID: %d\n", id);
@@ -352,31 +361,37 @@ int main(int argc, char *argv[]){
 		printf("At end: %d\n", song.at_last_track);
 		song.jsonstreamURL = json_object_get(jsontrack, "url");
 		song.streamURL = json_string_value(song.jsonstreamURL);
-		printf("StreamURL: %s\n", song.streamURL);
+		//printf("StreamURL: %s\n", song.streamURL);
 	
 		// Set the filename to the format artist - trackname.mp3
 		// TODO: Download files to a file in ~/8linux/playlist/
 		// TODO: Get cover art for the playlist as well
 		snprintf(song.filename, 999, "%s - %s.mp3", song.artist, song.trackname);
-		
+		//snprintf(song.filename, 999, "%s/8tracks/%s/%s - %s.mp3", home, mixName, song.artist, song.trackname);
+		//printf("Filename: %s\n", song.filename);
 		// Download the file
 		// TODO: set mp3 id3 tags
 		if(request_to_file(song.streamURL, song.filename) != 0){
-			fprintf(stderr, "Downloading %s failed.", song.filename);
+			fprintf(stderr, "Downloading %s failed.\n", song.filename);
+			return -1;
 		}
 		
 		// Report a "performance"
 		// curl http://8tracks.com/sets/111696185/report.json?track_id=[track_id]&mix_id=[mix_id]
 		snprintf(selectURL, 999, "http://8tracks.com/sets/%d/report.json?track_id=%d&mix_id=%d", playToken, song.id, id); 
-		printf("Waiting to report a performance: 1min\n");
-		sleep(60); //60s
+		// printf("Performance URL: %s\n", selectURL);
+		printf("Waiting to report a performance (30s)\n");
+		sleep(30); //30s
 		text = request(selectURL); // Report a performance
+		printf("Reported. Waiting to start next song. (1min 30s)\n");
+		// TODO: Get track length and wait a little bit less than that time (-10s)
+		sleep(90); //90s
 		first = 0; //Not a pretty way of handling it but oh well
 		// at_last_track = song.at_last_track; // Same as above
 		at_last_track = song.at_last_track;
 	} while (!at_last_track);
 
-	printf("All done!.");
+	printf("All done!.\n");
 	return 0;
 }
 
