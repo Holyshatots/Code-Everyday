@@ -12,8 +12,8 @@ Basic program that will download playlists from 8tracks
 * http://8tracks.com/dp/electrominimalicious
 * and it will download all of the songs into a folder in ~/Music/8Linux/playlistname
 * compiled with: 
-* `curl-config --cc --cflags` -o 8linuxv2 8linuxv2.c `curl-config --libs` -ljansson 
-
+	gcc -I/usr/local/include -I/usr/local/include/taglib -o 8linuxv2 8linuxv2.c -L/usr/local/lib -lcurl -ljansson -ltag_c
+	
 */
 
 #include <stdio.h>
@@ -27,6 +27,7 @@ Basic program that will download playlists from 8tracks
 
 #include <jansson.h>
 #include <curl/curl.h>
+#include <tag_c.h>
 
 #define BUFFER_SIZE  (256 * 1024) // 256KB
 
@@ -44,10 +45,12 @@ struct track {
 	const char *trackname;
 	const char *artist;
 	const char *streamURL;
+	char *filetype;
 	char filename[1000];
 	int id;
 	int at_beginning; //True if at the first track in the mix
 	int at_last_track; //True if at the last track in the mix
+	int length;
 };
 
 static size_t write_response(void *ptr, size_t size, size_t nmemb, void *stream) {
@@ -169,6 +172,8 @@ int request_to_file(const char *url, const char *filename) {
 }
 
 int main(int argc, char *argv[]){
+	const char *mixName;
+	char mixName2[1000] = {0};
 	char url[URL_SIZE];
 	char *text;
 	const char *message;
@@ -176,10 +181,9 @@ int main(int argc, char *argv[]){
 	char  *file = "/.8tracks";
 	char *filename;
 	char *home;
-	const char *mixName;
+	char systemcmd[1000] = {0};
 	
-	home = getenv("HOME"); // Have to do this because strcpy was giving me 
-	filename = getenv("HOME"); // grief
+	filename = getenv("HOME");
 	
 	filename = strcat(filename, file);
 	// printf("Play token file: %s\n", filename);
@@ -201,6 +205,12 @@ int main(int argc, char *argv[]){
 	
 	int first = 1;
 	int at_last_track;
+	
+	int c = 0;
+	
+	TagLib_File *taglibfile;
+	TagLib_Tag *tag;
+	const TagLib_AudioProperties *properties;
 	
 	// Check usage
 	if (argc != 2){
@@ -258,9 +268,25 @@ int main(int argc, char *argv[]){
 	}
 	mixName = json_string_value(jsonmixName);
 	printf("Mix name: %s\n", mixName);
+	snprintf(mixName2, 999, "%s", mixName);
+	// Set all whitespace to dashes
+	while(mixName2[c] != '\0'){
+		if(mixName2[c] == ' '){
+			mixName2[c] = '-';
+		}
+		// Don't want the extra whitespace char to become a dash
+		if(mixName2[c] == '-' && mixName2[c+1] == '\0'){
+			mixName2[c] = '\0';
+		}
+		if(mixName2[c] == '\'' || mixName2[c] == '/'){
+			mixName2[c] = '_';
+		}
+		c++;
+	}
+	//printf("Mix name2: %s\n", mixName2);
 	// Set the mix id
 	id = json_integer_value(jsonid);
-	printf("Mix ID: %d\n", id);
+	//printf("Mix ID: %d\n", id);
 	printf("Number of tracks: %d\n", trackCount);
 	// Free the document
 	json_decref(root);
@@ -274,7 +300,7 @@ int main(int argc, char *argv[]){
 	if (in_file2 == NULL) {
 		/* now you can use the file */
 		// Get token
-		printf("~/.8linux doesn't exist.\n");
+		//printf("~/.8linux doesn't exist.\n");
 		in_file2 = fopen(filename, "w");
 		if(in_file2 == NULL){
 			printf("Could not create ~/.8linux");
@@ -297,30 +323,28 @@ int main(int argc, char *argv[]){
 		}
 		message = json_string_value(jsonplayToken);
 		playToken = atoi(message);
-		printf("Writing: %s\n", message);
+		//printf("Writing: %s\n", message);
 		fwrite(message, 1, sizeof(message)+1 , in_file2);
 		fclose(in_file2);
 		json_decref(root);
 	} else {
 		/* the file already existed */
 		// Load previously created token
-		printf("~/.8linux exists.\n");
+		//printf("~/.8linux exists.\n");
 		fread(message2, sizeof(int), 15, in_file2);
 		playToken = atoi(message2);
 		fclose(in_file2);
 	}	
-	printf("Play token: %d\n", playToken);
-	snprintf(selectURL, 999, "http://8tracks.com/sets/%d/play.json?mix_id=%d", playToken, id);
+	//printf("Play token: %d\n", playToken);
+	snprintf(selectURL, 999, "http://8tracks.com/sets/%d/play.json?mix_id=%d",  playToken, id);
 	
 	// Select the mix for play back
 	// http://8tracks.com/sets/111696185/play.json?mix_id=14
-	
 	do {
 		if(!first){
 			snprintf(selectURL, 999, "http://8tracks.com/sets/%d/next.json?mix_id=%d", playToken, id); 
 		}
-
-		printf("%s\n", selectURL);
+		//printf("%s\n", selectURL);
 		text = request(selectURL);
 		if(!text){
 			return 1;
@@ -358,23 +382,79 @@ int main(int argc, char *argv[]){
 //		printf("At beginning: %d\n", song.at_beginning);
 		song.jsonat_last_track = json_object_get(jsontrack, "at_last_track");
 		song.at_last_track = json_is_true(song.jsonat_last_track);
-		printf("At end: %d\n", song.at_last_track);
+		//printf("At end: %d\n", song.at_last_track);
 		song.jsonstreamURL = json_object_get(jsontrack, "url");
 		song.streamURL = json_string_value(song.jsonstreamURL);
 		//printf("StreamURL: %s\n", song.streamURL);
-	
+		if(strstr(song.streamURL, ".mp3") != NULL){
+			// The audio file is an mp3
+			printf("The file is an mp3\n");
+			song.filetype = "mp3";
+		} else if(strstr(song.streamURL, "soundcloud") != NULL || strstr(song.streamURL, "m4a") != NULL){
+			// The audio file is an m4a because soundcloud uses m4a
+			printf("The file is an m4a\n");
+			song.filetype = "m4a";
+		} else {
+			// The audio file is unknown
+			printf("The file type is unknown\n");
+			return 1;
+		}
 		// Set the filename to the format artist - trackname.mp3
 		// TODO: Download files to a file in ~/8linux/playlist/
 		// TODO: Get cover art for the playlist as well
-		snprintf(song.filename, 999, "%s - %s.mp3", song.artist, song.trackname);
+		// NOTE: Path hardcoded for the moment..
+		// home = getenv("HOME"); // Wtf, it is somehow giving me /home/holyshatots/.8tracks
+		snprintf(systemcmd, 999, "mkdir -p /home/holyshatots/8linux/%s/", mixName2);
+		system(systemcmd);
+		snprintf(song.filename, 999, "/home/holyshatots/8linux/%s/%s-%s.%s", mixName2, song.artist, song.trackname, song.filetype);
 		//snprintf(song.filename, 999, "%s/8tracks/%s/%s - %s.mp3", home, mixName, song.artist, song.trackname);
-		//printf("Filename: %s\n", song.filename);
+		c = 0;
+		/*
+		while(song.filename[c] != '\0'){
+			if(song.filename[c] == ' '){
+				song.filename[c] = '_';
+			}
+		// Don't want the extra whitespace char to become a dash
+			if(song.filename[c] == '_' && song.filename[c+1] == '\0'){
+				song.filename[c] = '\0';
+			}
+			c++;
+		}
+		*/
+		printf("Filename: %s\n", song.filename);
 		// Download the file
-		// TODO: set mp3 id3 tags
 		if(request_to_file(song.streamURL, song.filename) != 0){
 			fprintf(stderr, "Downloading %s failed.\n", song.filename);
 			return -1;
 		}
+		
+		// Set the id3 tags
+		taglibfile = taglib_file_new(song.filename); //Load the taglib file
+		if(taglibfile == NULL){
+			fprintf(stderr, "Could not open file with taglib");
+			return 1;
+		}
+		//printf("After file_new\n");
+		tag = taglib_file_tag(taglibfile);
+		//printf("After file_tag\n");
+		properties = taglib_file_audioproperties(taglibfile);
+		//printf("After file_audioproperties\n");
+		
+		// It seems that .m4a files cause a SIGSEGV for some reason :/
+		// Possible workarounds:
+		// -Use another library for m4a files
+		// -Convert all m4a files to mp3s
+		if(song.filetype == "mp3"){
+			taglib_tag_set_title(tag, song.trackname); //Set title
+			//printf("After set_title\n");
+			taglib_tag_set_artist(tag, song.artist); // Set artist
+			//printf("After set_artist\n");
+			song.length = taglib_audioproperties_length(properties);
+			if(!taglib_file_save(taglibfile)){
+				fprintf(stderr, "Error saving taglibfile\n");
+			}
+		}
+		taglib_file_free(taglibfile); // Free the taglib file
 		
 		// Report a "performance"
 		// curl http://8tracks.com/sets/111696185/report.json?track_id=[track_id]&mix_id=[mix_id]
@@ -387,7 +467,6 @@ int main(int argc, char *argv[]){
 		// TODO: Get track length and wait a little bit less than that time (-10s)
 		sleep(90); //90s
 		first = 0; //Not a pretty way of handling it but oh well
-		// at_last_track = song.at_last_track; // Same as above
 		at_last_track = song.at_last_track;
 	} while (!at_last_track);
 
