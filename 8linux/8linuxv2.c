@@ -278,7 +278,7 @@ int main(int argc, char *argv[]){
 		if(mixName2[c] == '-' && mixName2[c+1] == '\0'){
 			mixName2[c] = '\0';
 		}
-		if(mixName2[c] == '\'' || mixName2[c] == '/'){
+		if(mixName2[c] == '\'' || mixName2[c] == '/' || mixName2[c] == '(' || mixName2[c] == ')'){
 			mixName2[c] = '_';
 		}
 		c++;
@@ -370,12 +370,16 @@ int main(int argc, char *argv[]){
 		struct track song;
 		song.jsonartist = json_object_get(jsontrack, "performer");
 		song.artist = json_string_value(song.jsonartist);
-		printf("Artist: %s\t\t", song.artist);
 		song.jsontrackname = json_object_get(jsontrack, "name");
 		song.trackname = json_string_value(song.jsontrackname);
-		printf("Track: %s\t\t", song.trackname);
 		song.jsonid = json_object_get(jsontrack, "id");
 		song.id = json_integer_value(song.jsonid);
+		if(song.artist == NULL || song.trackname == NULL){
+			printf("Done!\n");
+			return 0;
+		}
+		printf("Artist: %s\t\t", song.artist);
+		printf("Track: %s\t\t", song.trackname);		
 		printf("Song ID: %d\t\t\n", song.id);
 //		song.jsonat_beginning = json_object_get(jsontrack, "at_beginning");
 //		song.at_beginning = json_is_true(song.jsonat_beginning);
@@ -404,9 +408,9 @@ int main(int argc, char *argv[]){
 		// TODO: Get cover art for the playlist as well
 		// NOTE: Path hardcoded for the moment..
 		// home = getenv("HOME"); // Wtf, it is somehow giving me /home/holyshatots/.8tracks
-		snprintf(systemcmd, 999, "mkdir -p /home/holyshatots/8linux/%s/", mixName2);
+		snprintf(systemcmd, 999, "mkdir -p /home/holyshatots/Music/8linux/%s/", mixName2);
 		system(systemcmd);
-		snprintf(song.filename, 999, "/home/holyshatots/8linux/%s/%s-%s.%s", mixName2, song.artist, song.trackname, song.filetype);
+		snprintf(song.filename, 999, "/home/holyshatots/Music/8linux/%s/%s - %s", mixName2, song.artist, song.trackname);
 		//snprintf(song.filename, 999, "%s/8tracks/%s/%s - %s.mp3", home, mixName, song.artist, song.trackname);
 		c = 0;
 		/*
@@ -429,6 +433,7 @@ int main(int argc, char *argv[]){
 		}
 		
 		// Set the id3 tags
+		/*
 		taglibfile = taglib_file_new(song.filename); //Load the taglib file
 		if(taglibfile == NULL){
 			fprintf(stderr, "Could not open file with taglib");
@@ -455,7 +460,7 @@ int main(int argc, char *argv[]){
 			}
 		}
 		taglib_file_free(taglibfile); // Free the taglib file
-		
+		*/
 		// Report a "performance"
 		// curl http://8tracks.com/sets/111696185/report.json?track_id=[track_id]&mix_id=[mix_id]
 		snprintf(selectURL, 999, "http://8tracks.com/sets/%d/report.json?track_id=%d&mix_id=%d", playToken, song.id, id); 
