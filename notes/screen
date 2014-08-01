@@ -1,0 +1,2 @@
+# Reattaching to a screen
+screen -rd

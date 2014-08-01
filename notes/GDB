@@ -1,0 +1,2 @@
+# Disassemble arbritrary location
+x/i 0xdeadbeef
