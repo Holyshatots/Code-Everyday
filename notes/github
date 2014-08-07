@@ -1,0 +1,8 @@
+git commit -m "Message for commit"
+# Commits your files, adding the message "first commit"
+
+git push origin master
+# Sends your commits in the "master" branch to GitHub
+
+git commit -a -m "Message for commit
+# commits all changes automatically
