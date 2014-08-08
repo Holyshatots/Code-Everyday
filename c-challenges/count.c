@@ -14,7 +14,6 @@
 int main(int argc, char *argv[]){
 	int count = 0;
 	char a;
-	
 	if (argc != 2){
 		puts("Usage: ./count filename.txt");
 		return 0;

@@ -22,3 +22,4 @@ int main(int argc, char *argv[]){
 	printf("%s\n", &string[0]);
 	return 0;
 }
+q

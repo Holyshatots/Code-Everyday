@@ -1,0 +1,20 @@
+## Notes 
+
+- Connect at 57600 baud to get repeating output. Apparently pressing the pads will start to print out some
+interesting text
+- Use propelleride to program
+
+
+## Badge Specs
+
+- Propeller P8X32A 32-bit Multicore Microcontroller
+- infrared LED
+- receiver for badge-to-badge communication
+- 8 LEDs
+- 4 button touch pads 
+
+
+## Resources
+
+http://forums.parallax.com/showthread.php/156782?utm_content=buffer8a9a0&utm_medium=social&utm_source=twitter.com&utm_campaign=buffer
+
