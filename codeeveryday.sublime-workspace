@@ -25,6 +25,14 @@
 				"buffer_size": 551,
 				"line_ending": "Unix"
 			}
+		},
+		{
+			"file": "coffee/one.c",
+			"settings":
+			{
+				"buffer_size": 548,
+				"line_ending": "Unix"
+			}
 		}
 	],
 	"build_system": "",
@@ -51,6 +59,7 @@
 	},
 	"file_history":
 	[
+		"/home/holyshatots/git/Code-Everyday/coffee/one.c"
 	],
 	"find":
 	{
@@ -85,7 +94,7 @@
 	"groups":
 	[
 		{
-			"selected": 1,
+			"selected": 2,
 			"sheets":
 			[
 				{
@@ -140,6 +149,32 @@
 						"zoom_level": 1.0
 					},
 					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "coffee/one.c",
+					"settings":
+					{
+						"buffer_size": 548,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								180,
+								180
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
 				}
 			]
 		}
@@ -150,7 +185,7 @@
 	},
 	"input":
 	{
-		"height": 0.0
+		"height": 33.0
 	},
 	"layout":
 	{
