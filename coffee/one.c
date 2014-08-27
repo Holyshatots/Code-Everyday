@@ -5,9 +5,9 @@ B
 
 #include <stdio.h>
 
-int base9toBase10()
+int base9toBase10(int a, int b, int c)
 {
-	return 
+
 }
 
 
