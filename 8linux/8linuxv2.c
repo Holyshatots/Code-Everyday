@@ -171,7 +171,9 @@ int request_to_file(const char *url, const char *filename) {
 	return 0;
 }
 
-int main(int argc, char *argv[]){
+int main(int argc, char *argv[])
+{
+  
 	const char *mixName;
 	char mixName2[1000] = {0};
 	char url[URL_SIZE];

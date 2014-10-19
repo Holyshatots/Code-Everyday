@@ -1,0 +1,9 @@
+behemoth1:aesebootiv
+
+## basic program logic
+
+Allocate 0x60 and place 0x8048520 on the stack
+Printf
+
+
+
