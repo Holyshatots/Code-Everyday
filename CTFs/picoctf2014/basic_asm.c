@@ -1,28 +1,15 @@
 #include <stdio.h>
 
-int main(int argc, char *argv[])
+int main()
 {
-	_asm_("
-	
-		MOV $10357,%ebx
-		MOV $10487,%eax
-		MOV $8408,%ecx
-		CMP %eax,%ebx
-		JL L1
-		JMP L2
-		L1:
-		IMUL %eax,%ebx
-		ADD %eax,%ebx
-		MOV %ebx,%eax
-		SUB %ecx,%eax
-		JMP L3
-		L2:
-		IMUL %eax,%ebx
-		SUB %eax,%ebx
-		MOV %ebx,%eax
-		ADD %ecx,%eax
-		L3:
-		NOP
-
-	");
+	asm ( 
+		"mov $10357,%ebx\n\t"
+		"mov $10487,%eax\n\t"
+		"mov $8408,%ecx\n\t"
+		"cmp %eax,%ebx\n\t"
+		"imul %eax,%ebx\n\t"
+		"add %eax,%ebx\n\t"
+		"mov %ebx,%eax\n\t"
+		"sub %ecx,%eax"
+		);
 }
