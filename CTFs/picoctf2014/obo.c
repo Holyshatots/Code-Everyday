@@ -4,25 +4,28 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-const char *password_file_path = "/home/obo/password.txt";
+const char *password_file_path = "password.txt";
 
 int hex_table[256];
 
 void generate_hex_table(void) {
   int i;
   for (i = 0; i <= 256; ++i) {
-    hex_table[i] = -1;
+	hex_table[i] = -1;
   }
 
   for (i = 0; i <= 10; ++i) {
+    printf("%d : %d\n",  '0'+i, i);
     hex_table['0' + i] = i;
   }
 
   for (i = 0; i <= 6; ++i) {
+    printf("%d : %d\n", 'a'+i, 10 + i);
     hex_table['a' + i] = 10 + i;
   }
 
   for (i = 0; i <= 6; ++i) {
+    printf("%d : %d\n", 'A'+i, 10 + i);
     hex_table['A' + i] = 10 + i;
   }
 
@@ -67,6 +70,7 @@ int main(int argc, char **argv) {
   read_password(stdin, new_password, sizeof(new_password));
   for (i = 0; i <= strlen(new_password); ++i) {
     int index = hex_table[(unsigned char) new_password[i]];
+    printf("Index : %d\t i: %d\n", index, i);
     if (index == -1) {
       printf("Invalid character: %c\n", new_password[i]);
       exit(1);
@@ -75,6 +79,7 @@ int main(int argc, char **argv) {
   }
 
   for (i = 0; i <= 16; ++i) {
+    printf("Digits[%d]: %d\n", i, digits[i]);
     if (digits[i] == 0) {
       printf("Password is not complex enough: %d\n", i);
       return 1;
