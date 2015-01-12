@@ -1,27 +1,31 @@
 package com.holyshatots.setOne;
 
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+
 public class Xor
 {
-	public Xor()
+	public static void test()
 	{
-		
+		String testOne = new String("1c0111001f010100061a024b53535009181c");
+		String testTwo = new String("686974207468652062756c6c277320657965");
+		System.out.println(xor(testOne, testTwo));
 	}
 	
-	public String xor(String firstNumber, String secondNumber)
+	public static String xor(String firstNumber, String secondNumber)
 	{
 		byte[] firstByte = hexStringToByte(firstNumber);
 		byte[] secondByte = hexStringToByte(secondNumber);
-		byte[] resultByte = new byte[firstByte.length - 1];
+		byte[] resultByte = new byte[firstByte.length];
 		
 		int i = 0;
 		for (byte b : firstByte)
 			resultByte[i] = (byte) (b ^ secondByte[i++]);
 		
-		
-		return null;
+		return Integer.toHexString(byteArrayToInt(resultByte)).toString();
 	}
 	
-	private byte[] hexStringToByte(String s)
+	private static byte[] hexStringToByte(String s)
 	{
 		int len = s.length();
 		byte[] data = new byte[len / 2];
@@ -31,5 +35,12 @@ public class Xor
 								 + Character.digit(s.charAt(i+1), 16));
 		}
 		return data;
+	}
+	
+	private static int byteArrayToInt(byte[] b) 
+	{
+		final ByteBuffer bb = ByteBuffer.wrap(b);
+		bb.order(ByteOrder.LITTLE_ENDIAN);
+		return bb.getInt();
 	}
 }
