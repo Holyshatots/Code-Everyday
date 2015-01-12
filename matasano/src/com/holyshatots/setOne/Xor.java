@@ -22,7 +22,7 @@ public class Xor
 		for (byte b : firstByte)
 			resultByte[i] = (byte) (b ^ secondByte[i++]);
 		
-		return Integer.toHexString(byteArrayToInt(resultByte)).toString();
+		return Integer.toHexString(byteArrayToInt(resultByte));
 	}
 	
 	private static byte[] hexStringToByte(String s)
