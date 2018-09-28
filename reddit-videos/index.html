@@ -1,0 +1,141 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+
+    <title>Reddit Videos</title>
+    <meta name="description" content="Creates a playlist of youtube videos for a given subreddit">
+    <meta name="author" content="Mitch McAffee">
+
+    <!--[if lt IE 9]>
+      <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+    <!-- Theme -->
+    <link rel="stylesheet" href="./css/vendor/bootstrap-paper.min.css">
+
+    <script src="http://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+
+    <script src="./js/vendor/urlparam.js"></script>
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+
+    <!-- My javascript -->
+    <script src="./js/reddit.js"></script>
+  </head>
+
+  <body>
+    <nav class="navbar navbar-inverse">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand">Reddit Videos</a>
+        </div>
+
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+          <ul class="nav navbar-nav">
+            <li><a href="index.html?subreddit=videos">/r/videos</a></li>
+            <li><a href="index.html?subreddit=musicvideos">/r/musicvideos</a></li>
+            <li><a href="index.html?subreddit=listentothis">/r/listentothis</a></li>
+          </ul>
+          <div class="navbar-form navbar-right" role="search">
+            <div class="form-group">
+              <input id="form-subreddit" class="form-control" placeholder="Subreddit" type="text">
+              <select id="form-category" class="form-control" style="color:#FFFFFF">
+                <option>hot</option>
+                <option>top</option>
+                <option>random</option>
+              </select>
+            </div>
+            <button onclick="redirectForm();" class="btn btn-default">Go</button>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container">
+      <div class="row">
+        <div class="col-md-1">
+          <span class="btn btn-primary btn-lg" href="#" onclick="Reddit.prev();">
+            <span class="glyphicon glyphicon-chevron-left"></span>
+          </span>
+        </div>
+        <div id="videos" class="col-md-10">
+          <div id="loading-videos" class="text-center"><h3>Loading videos..</h3></div>
+        </div>
+        <div class="col-md-1">
+          <span class="btn btn-primary btn-lg" href="#" onclick="Reddit.next();">
+            <span class="glyphicon glyphicon-chevron-right"></span>
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      $(document).ready(function() {
+        var urlParams = {
+          subreddit : paramOrDefault("subreddit", "videos"),
+          category : paramOrDefault("category", "hot")
+        };
+
+        // Get the first set of videos
+        Reddit.getVideos(urlParams.subreddit, urlParams.category, function(data) {
+          $("#loading-videos").remove();
+          Reddit.renderVideos();
+        });
+
+        // Replace the subreddit form
+        $("#form-subreddit").attr("placeholder", urlParams.subreddit);
+      });
+
+      function paramOrDefault(param, defaultValue) {
+        var defaults = {
+          "subreddit" : "videos",
+          "category" : "hot"
+        };
+
+        var urlParam = getURLParameter(param);
+        if(urlParam != null) {
+          return urlParam;
+        } else {
+          // Default to the videos subreddit
+          if(defaults[param] != null) {
+            return defaults[param];
+          } else {
+            return defaultValue;
+          }
+        }
+      }
+
+      // Redirect to the subreddit entered by the user
+      function redirectForm() {
+        var subreddit = $("#form-subreddit").val();
+        var category = $("#form-category").val();
+        redirect(subreddit, category)
+      }
+
+      function goToSubreddit(subreddit) {
+        redirect(subreddit, paramOrDefault("category", null));
+      }
+
+      function goToCategory(category) {
+        redirect(paramOrDefault("subreddit", null), category);
+      }
+
+      function redirect(subreddit, category) {
+        var toRedirect = window.location + "?subreddit=" + subreddit + "&category=" + category;
+        window.location.href = toRedirect;
+      }
+    </script>
+
+  </body>
+</html>
