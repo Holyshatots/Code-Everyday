@@ -1,0 +1,10 @@
+package doctor.model;
+
+public class Doctor
+{
+	public Doctor()
+	{
+		
+	}
+	public void askAQuestion
+}

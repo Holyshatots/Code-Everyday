@@ -1,0 +1,22 @@
+package doctor.controller;
+
+import doctor.model.Doctor;
+import doctor.view.AppView;
+
+private Doctor watson;
+
+private AppView view;
+
+public class AppController
+{
+	public AppController
+	{
+		
+	}
+	public void start()
+	{
+
+		
+		
+	}
+}

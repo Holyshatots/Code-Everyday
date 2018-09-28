@@ -1,0 +1,103 @@
+---
+layout: post
+title: AP Java Vocab 
+date: 2015-04-17 08:00:00
+---
+
+A vocab list for the AP Computer Science test
+
+- abstract : a type of class that cannot be instantiated 
+- .add : Add a new object to an arrayList
+- algorithm : A defined way to do something 
+- argument : An actual parameter in a method call, or one of the values combined by an operator
+- array : A simple collection of values of the same primitive type.
+- ArrayList : A Java class that implements a dynamically growing array of objects  
+- assignment operator : The = places a new value into a variable
+- base case : In recursion, it breaks the loop when it is met
+- big O notation : a function that describes the worst case of an algorithm
+- binary : base 2 numbers
+- boolean : A primitive that is only true/false
+- cast : Convert from one type of object to another
+- catch : Used to catch an error and handle it properly, always after a try block
+- char : A primitive type that holds enough for one character 
+- child class : A class that inherits from another class
+- class : Defines the type of Java object in the source
+- comments : What good programmers use to describe why their code is doing things
+- .compareTo : Will return a value based on the differences of two objects
+- compiling : Converting source code into machine code or some intermediate form
+- concatenation : Placing one string after another to form a new string
+- conditional operator : Another name for ternary operator will be in the form e1 ? e2 : e3 
+- constructor : The method that is called when an object is created
+- control structure : The way the program has its controls setup
+- de morgan's laws : Rules that allow certain logical statements to be written in a simpler form for use in programs /
+circuits
+- decrement operator : -- will decrease the variable by 1 
+- do-while : A form of a while loop that will execute once before checking the condition
+- double : A long digit in java
+- encapsulation : The hiding of implementation details
+- .equals : Returns based on if the object's are considered equal
+- escape sequence : A character in text that is not interpreted literally but has a special meaning like a new line
+- exception : An error that is thrown
+- extends : Inherits all of the methods and variables of the extended class
+- for each loop : A for in the form for(objectType name : array){} that loops through all data members 
+- for : A loop that continues until a condition is met
+- garbage collection : When objects lose all references to them they are cleaned up from memory automatically 
+- getters : Returns data members that are private to an object
+- hexadecimal : Numbers in base16
+- identifier : The name used to define in Java
+- if-else : A block that is dependent on a condition
+- implements : Inherits the methods and variables of the implemented class
+- import : Import classes into the package
+- increment operator : ++ increases a variable by 1
+- index : The current position 
+- insertion sort : A type of sorting algorithm 
+- instance : An object whose type is that class
+- int : A whole number primitive
+- interface : A group of related methods with empty bodies. These cannot be instantiated
+- iteration : Looping through all members of a data structure
+- javadoc : The way of documenting in Java that provides readable documentation
+- List : A Java class that implements a dynamically growing array of objects
+- logical operator : A symbol or word to connect two or more sentences
+- main : The entry point into a java program 
+- matrix : A way of storing information that is equivalent to an 2D array
+- method : A function that has code that is run when the method is called
+- method overriding : Implementing a new method from the parent class
+- modulus operator : % returns the remainder 
+- nested loop : A loop within another loop
+- new : Instantiate another instance of an object
+- null : Nothing
+- object : A representation that has data and can do stuff
+- object-oriented programming (oop) : Programming using objects 
+- package : A collection of similar classes
+- parameter : A variable that must be given a specific value during the execution of a program
+- parent class : The class that the child class inherits from
+- precedence (order of operations) : The order that the math symbols are computed
+- precision : The number of significant figures in a number
+- primitive data type : A simple type of data 
+- pseudocode : Representation of code that is general and won't actually run
+- recursion : See recursion
+- relational operator : Tests a relationship between two objects
+- .remove : Remove an object from an arrayList
+- reserved words : Words that are taken by Java and so cannot be used for certain things
+- return : What a method gives back to the caller
+- round-off error : An error because information was cut off 
+- row : A line in a 2D data structure
+- Scanner : Input into the program
+- .set : Used to make a variable equal to the argument
+- setters : Set private data members
+- source code : The original code that the programmer wrote
+- static : Once the program is run this never changes 
+- String class : A string that is a list of characters
+- subclass : A class within another class
+- .substring : Take a string from within another string
+- super : Execute the method of the parent class in an overriding method
+- System.in : Input through the console
+- System.out : Output through the console
+- top down design : Creating a program from the large level to the specifics
+- .toString : Get a representation of an object in a string
+- try : Attempt to do something but catch an error if one happens
+- type conversion : Convert from one data format to another
+- uml : A representation of the classes and their relationships
+- while : Loop that continues until a condition is met
+- wrapper class : A class that encapsulates another one
+

@@ -1,0 +1,9 @@
+package doctor.controller;
+
+public class AppController
+{
+	public void start()
+	{
+		
+	}
+}

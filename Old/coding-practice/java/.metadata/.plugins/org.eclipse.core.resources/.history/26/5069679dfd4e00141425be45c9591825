@@ -1,0 +1,9 @@
+package doctor.model;
+
+public class Doctor
+{
+	public Doctor()
+	{
+		
+	}
+}

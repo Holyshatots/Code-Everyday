@@ -1,0 +1,13 @@
+package doctor.controller;
+
+public class AppController
+{
+	public AppController
+	{
+		
+	}
+	public void start()
+	{
+		Doctor watson = new Doctor;
+	}
+}

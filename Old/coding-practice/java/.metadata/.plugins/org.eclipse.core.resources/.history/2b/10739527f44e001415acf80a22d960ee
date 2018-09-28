@@ -1,0 +1,24 @@
+package doctor.controller;
+
+import doctor.model.Doctor;
+import doctor.view.AppView;
+
+public class AppController
+{
+	private Doctor watson;
+
+	private AppView view;
+	
+	public AppController
+	{
+		watson = new Doctor();
+		view = new AppView();
+		
+	}
+	public void start()
+	{
+		
+		
+		
+	}
+}

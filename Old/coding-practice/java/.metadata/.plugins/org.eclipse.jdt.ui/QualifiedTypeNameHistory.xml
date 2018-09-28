@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<qualifiedTypeNameHistroy>
+<fullyQualifiedTypeName name="monsters.view.MonsterView"/>
+<fullyQualifiedTypeName name="monsters.controller.MonsterAppController"/>
+<fullyQualifiedTypeName name="chatbot.model.Chatbot"/>
+<fullyQualifiedTypeName name="chatbot.view.ChatbotView"/>
+<fullyQualifiedTypeName name="chatbot.controller.AppController"/>
+<fullyQualifiedTypeName name="javax.swing.JOptionPane"/>
+<fullyQualifiedTypeName name="java.util.StringTokenizer"/>
+<fullyQualifiedTypeName name="doctor.model.Doctor"/>
+<fullyQualifiedTypeName name="doctor.view.AppView"/>
+</qualifiedTypeNameHistroy>

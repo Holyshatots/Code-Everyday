@@ -1,0 +1,13 @@
+package doctor.controller;
+
+public class AppController
+{
+	void AppController
+	{
+		
+	}
+	public void start()
+	{
+		
+	}
+}
