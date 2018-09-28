@@ -1,0 +1,56 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="${relativePackage}.${activityClass}" >
+
+    <Button
+        android:id="@+id/guessButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="73dp"
+        android:text="@string/guess_buttontext" />
+
+    <EditText
+        android:id="@+id/userGuess"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/guessButton"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="66dp"
+        android:layout_weight="0.15"
+        android:ems="10"
+        android:hint="@string/number_hint"
+        android:inputType="number"
+>
+
+        <requestFocus />
+
+    </EditText>
+
+    <TextView
+        android:id="@+id/playerMoneyLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/guessButton"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="27dp"
+        android:text="Medium Text"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
+        android:id="@+id/computerThinkingLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="78dp"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:text="@string/guesswhatnumber_title"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textAlignment="gravity"  />
+
+</RelativeLayout>

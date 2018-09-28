@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Gambling Simulator</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="guesswhatnumber_title">I\'m thinking of a number between 1 and 100..</string>
+    <string name="number_hint">Your Guess</string>
+    <string name="guess_buttontext">Guess</string>
+    <string name="title_activity_sign_up">Sign Up</string>
+    <string name="title_activity_results_screen">\"Results\"</string>
+    <string name="sosorrybutno_label">Sorry but I was thinking of..</string>
+    <string name="guessagain_button">Guess Again</string>
+    <string name="title_activity_asjdhfasjh">Asjdhfasjh</string>
+    <string name="title_activity_win">WinActivity</string>
+    <string name="try_again">Try Again!</string>
+    <string name="blackjack_and_hookers">You lose again, you stupid intoxicant.</string>
+    <string name="title_activity_gambling_addiction">GamblingAddictionActivity</string>
+    <string name="title_activity_game_selection">GameSelection</string>
+    <string name="screen_selection_layout">Pick a Game.. Any Game..</string>
+    <string name="to_simulator_button">Guess Eh Number</string>
+    <string name="to_blackjack_button">BlackJack</string>
+    <string name="title_activity_black_jack">BlackJackActivity</string>
+    <string name="player_cash">Your Cash: -10 monies</string>
+    <string name="dealers_hand_label">Dealers Hand</string>
+    <string name="player_hand_Label">Your hand is bollocks</string>
+    <string name="players_hand_label">Your hand is bollocks</string>
+    <string name="hit_button">Hit</string>
+    <string name="stay_button">Stay</string>
+    <string name="fold_button">Fold</string>
+    <string name="player_bet_label">Your butt.. I mean bet</string>
+    <string name="ok">Ok</string>
+
+</resources>
