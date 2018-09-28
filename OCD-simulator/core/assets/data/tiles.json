@@ -1,0 +1,413 @@
+[
+  {
+    "description":"The start tile",
+    "symbolEffects":[],
+    "tileType":3
+  },
+  {
+    "description":"You wake up and get out of bed a minute late, precisely at 6:01AM. Unsure of your preparedness for another long day.",
+    "symbolEffects": [
+      {
+        "symbol":0,
+        "description":"You slept past your normal routine! Your anxiety for the day begins to set in.",
+        "effect":1
+      }
+    ],
+    "tileType":1
+  },
+  {
+    "description":"You go to the bathroom, and get into the shower. As you enter the shower you bump into the shelf and knock all of your soap and shampoo onto the shower floor.",
+    "symbolEffects": [
+      {
+        "symbol":1,
+        "description":"You scrub your body and hair with soap and shampoo until your skin is nearly raw, but at least your body is completely clean.",
+        "effect":1
+      },
+      {
+        "symbol":2,
+        "description":"No! You always have your soap and shampoo organized by height and color. You have to spend some extra time to make sure everything is in its own place.",
+        "effect":1
+      }
+    ],
+    "tileType":1
+  },
+  {
+    "description":"You brush your teeth.",
+    "symbolEffects": [
+      {
+        "symbol":1,
+        "description":"As always, you precisely brush each side of your mouth 15 times.",
+        "effect":1
+      }
+    ],
+    "tileType":1
+  },
+  {
+    "description":"You go and pick out your clothes for the day.",
+    "symbolEffects": [
+      {
+        "symbol":2,
+        "description": "You notice that your socks shifted when you opened your dresser drawer. You can not just leave them out of order.",
+        "effect":1
+      },
+      {
+        "symbol":0,
+        "description":"You take longer than usual ironing your clothes, setting you back 5 minutes from your normal schedule.",
+        "effect":1
+      }
+    ],
+    "tileType":1
+  },
+  {
+    "description":"",
+    "symbolEffects":[],
+    "tileType":2
+  },
+  {
+    "description":"You eat your breakfast. Nothing special or out of the ordinary.",
+    "symbolEffects":[],
+    "tileType":1
+  },
+  {
+    "description":"As you drink your morning coffee, you check the front door, but there is nothing there.",
+    "symbolEffects": [
+      {
+        "symbol":0,
+        "description":"Your daily newspaper is not there. What are you going to do for 15 minutes if you do not have your daily reading material?",
+        "effect":1
+      },
+      {
+        "symbol":3,
+        "description":"As you go to lock your door, you notice that the lock is jammed and is no longer working.",
+        "effect":7
+      }
+    ],
+    "tileType":1
+  },
+  {
+    "description":"You receive a call on your home phone.",
+    "symbolEffects": [
+      {
+        "symbol":4,
+        "description":"It was the wrong number. You hate talking to strangers and begin to have a small panic attack.",
+        "effect":1
+      }
+    ],
+    "tileType":1
+  },
+  {
+    "description":"You take your dog for his morning walk.",
+    "symbolEffects": [
+      {
+        "symbol":4,
+        "description": "A  child you never have seen before comes running up to you to pet your dog. You feel too uncomfortable to say anything to the child or her parents, so you stand there anxiously waiting for them to leave.",
+        "effect":7
+      },
+      {
+        "symbol":1,
+        "description": "Midway through your walk you notice someone forgot to clean up after their dog. Unfortunately you noticed it by stepping right in it.",
+        "effect":7
+      },
+      {
+        "symbol":0,
+        "description":"The stoplight you normally cross the street at is not working, forcing you to take the long way around. This adds 15 minutes to your normal walk.",
+        "effect":7
+      }
+    ],
+    "tileType":1
+  },
+  {
+    "description":"You leave home, as ready as possible for the 8 hour workday ahead of you.",
+    "symbolEffects": [
+      {
+        "symbol":3,
+        "description":"As always you check 3 times to make sure you locked your front door.",
+        "effect":1
+      }
+    ],
+    "tileType":1
+  },
+  {
+    "description":"",
+    "symbolEffects":[],
+    "tileType":2
+  },
+  {
+    "description":"As you begin your daily commute, you hit traffic that is at a dead stop. Apparently there is a bad accident ahead.",
+    "symbolEffects": [
+      {
+        "symbol":0,
+        "description":"You are going to have to call in late to work. This is going to take a while.",
+        "effect":6
+      }
+    ],
+    "tileType":1
+  },
+  {
+    "description":"You finally arrive at work. Your boss tells you that you are going to have to move to a new cubicle to make room for the new hire.",
+    "symbolEffects": [
+      {
+        "symbol":0,
+        "description": "It takes you nearly an hour to move everything. This was not in your daily routine, and will set you back all day.",
+        "effect":1
+      },
+      {
+        "symbol":2,
+        "description": "Once you move to your new desk, you have to reorganize everything. Organize your paper clips by color and size, your pencils by height, and your notes alphabetically.",
+        "effect":6
+      },
+      {
+        "symbol":1,
+        "description": "This cubicle has not been used in a while, and has the dust to prove it. You get out your cleaning supplies and begin to clean.",
+        "effect":1
+      }
+    ],
+    "tileType":1
+  },
+  {
+    "description":"Your co-worker trips as he goes by your cubicle. He spills his coffee all over the back of your chair and shirt.",
+    "symbolEffects": [
+      {
+        "symbol":5,
+        "description": "Regardless of your obsessions or compulsions, this is terrible.",
+        "effect":1
+      },
+      {
+        "symbol":1,
+        "description":"Water Droplet: This stain on your clothes is already stressing you out and you can not find your stain removing pen you usually carry.",
+        "effect":1
+      },
+      {
+        "symbol":4,
+        "description":"Your clumsy co-worker comes back with a paper towel and grabs your shoulder as he tries to dry you off.",
+        "effect":1
+      }
+    ],
+    "tileType":1
+  },
+  {
+    "description":"Despite all the interruptions, you are able to complete some of your daily work ahead of schedule and your boss commends you for it.",
+    "symbolEffects": [
+      {
+        "symbol":5,
+        "description":"You feel a great sense of accomplishment.",
+        "effect":0
+      }
+    ],
+    "tileType":1
+  },
+  {
+    "description": "You are now on your way home, you have entered the traffic hour.",
+    "symbolEffects": [
+      {
+        "symbol":6,
+        "description": "You constantly need to check up on your loved ones because you fear that they could be at harm because of you.",
+        "effect":1
+      }
+    ],
+    "tileType":1
+  },
+  {
+    "description":"",
+    "symbolEffects":[],
+    "tileType":2
+  },
+  {
+    "description": "You are still waiting on the road.",
+    "symbolEffects": [
+      {
+        "symbol":8,
+        "description": "You need to do this because you are constantly analyzing everything that you do, touch, and are involved in. What if I actually woke up on time this morning, would I be here? Or would I have been home by now? Was it my fault that my coworker spilled their coffee on me? Is everything my fault? Is my existence pointless? ",
+        "effect":1
+      }
+    ],
+    "tileType":1
+  },
+  {
+    "description": "You look at the time and realize that you are behind your daily schedule.",
+    "symbolEffects": [
+      {
+        "symbol":1,
+        "description": "You know that you are set on a very punctual time frame and you can not let that happen and this is why you begin to panic. What time will I get home? What time will I get to eating dinner? How long will it take me to get ready for bed?",
+        "effect":7
+      }
+    ],
+    "tileType":1
+  },
+  {
+    "description": "You decide to stop for some coffee.",
+    "symbolEffects": [
+      {
+        "symbol":10,
+        "description": "Since you stopped for coffee, your total comes to an uneven number, you decide to add something to your order to even the total. You buy an extra item so that way your total would come out even. You buy something unnecessary because you feel that something bad will happen if you don’t.",
+        "effect":1
+      }
+    ],
+    "tileType":1
+  },
+  {
+    "description": "You finally get home from work and all you want to do is just go straight to bed.",
+    "symbolEffects": [
+      {
+        "symbol":9,
+        "description": "Since you got home late, you have to double check everything and make sure everything is in order before you go to bed. You know that you always have to keep checking things off.",
+        "effect":7
+      }
+    ],
+    "tileType":1
+  },
+  {
+    "description": "You begin to make dinner, as you are getting things out of the pantry you realize that there is a stain in your pantry.",
+    "symbolEffects": [
+      {
+        "symbol": 2,
+        "description": "You begin to scrub down the whole pantry and make it look brand new. You wash the dishes twice to make sure that they won’t get dirty easily.",
+        "effect":7
+      },
+      {
+        "symbol": 9,
+        "description": "Since you are cleaning the pantry, you have to make sure that all parts of the pantry are cleaned spotless, the doors, the cases inside the pantry, and even the hinges have to be clean.",
+        "effect":6
+      }
+    ],
+    "tileType":1
+  },
+  {
+    "description":"",
+    "symbolEffects":[],
+    "tileType":2
+  },
+  {
+    "description": "You finally finish cleaning and you feel a lot better.",
+    "symbolEffects": [
+      {
+        "symbol":8,
+        "description": "Your mind decides to remind you of all the bad events that happened that day. You begin to analyze all of the little things like: maybe if you had picked a different pair of socks, then your day would have turned out better. You still feel like you have wasted a lot of time.",
+        "effect":0
+      }
+    ],
+    "tileType":1
+  },
+  {
+    "description": "It is already 9:30 p.m. and you were suppose to have showered by now, but you are starving so you decide to have a late dinner. You feel that after a rough day, you should cool down and try to do something without a time limit.",
+    "symbolEffects": [],
+    "tileType":1
+  },
+  {
+    "description": "You finish eating and get into the shower, you begin to scrub all your physical parts in order from toes to head 4 times in a row before moving on.",
+    "symbolEffects": [
+      {
+        "symbol":2,
+        "description": "You scrub all of your physical parts and with every part you scrub it four times before you move onto another part.",
+        "effect":0
+      },
+      {
+        "symbol":8,
+        "description": "You feel that this is the best way to get extremely clean.",
+        "effect":0
+      },
+      {
+        "symbol":9,
+        "description": "You have gone through every part of your body and have scrubbed every part four times, before moving onto another part.",
+        "effect":0
+      }
+    ],
+    "tileType":1
+  },
+  {
+    "description": "After your shower you glance at yourself.",
+    "symbolEffects": [
+      {
+        "symbol":9,
+        "description": "Although you may feel insecure, it is the self-harm that is worrying you.",
+        "effect":0
+      },
+      {
+        "symbol":8,
+        "description": "You hate thinking about self-harm, but you don’t know why you keep bringing yourself to the thought. You hope that you never act on harming yourself.",
+        "effect":0
+      }
+    ],
+    "tileType":1
+  },
+  {
+    "description": "You change into your pajamas and realize that there is a button missing on it.",
+    "symbolEffects": [
+      {
+        "symbol":10,
+        "description": "You look for the button because you believe that it is necessary. You are not sure how you will go on with the rest of night without your button. The button is not important.",
+        "effect":1
+      }
+    ],
+    "tileType":1
+  },
+  {
+    "description":"",
+    "symbolEffects":[],
+    "tileType":2
+  },
+  {
+    "description": "You finally find it after looking for it about half an hour later.",
+    "symbolEffects": [
+      {
+        "symbol":7,
+        "description": "Since the buttons are an uneven number, it could be seen as an unlucky and could cause dangerous consequences.",
+        "effect":7
+      },
+      {
+        "symbol":10,
+        "description": "You still decide to keep it because if you threw it away, then maybe something bad would happen.",
+        "effect":7
+      }
+    ],
+    "tileType":1
+  },
+  {
+    "description": " You are exhausted from the day and are ready to pass out.",
+    "symbolEffects": [
+      {
+        "symbol":8,
+        "description": "Turning your pillow 12 times makes sure that you pillow is positioned correctly. Doing this makes you believe that your mind is entering sleep mode, you analyze how this tossing of your pillow helps soothe you.",
+        "effect":1
+      }
+    ],
+    "tileType":1
+  },
+  {
+    "description": "You begin to start counting backwards from 100.",
+    "symbolEffects": [
+      {
+        "symbol":8,
+        "description": "Counting down from a 100 relaxes you, you believe that this has always worked for you.",
+        "effect":0
+      },
+      {
+        "symbol":7,
+        "description": "You need a lucky number in order to feel relaxed.",
+        "effect":0
+      },
+      {
+        "symbol":9,
+        "description": "You to check if the counting down is helping you fall asleep, it has almost always worked for you, but not tonight.",
+        "effect":0
+      }
+    ],
+    "tileType":1
+  },
+  {
+    "description": "You are so exhausted, but you can’t sleep, so you continue to keep counting and counting for the rest of the night.",
+    "symbolEffects": [
+      {
+        "symbol":8,
+        "description": "Your mind is stopping you from getting any sleep. It is keeping you up by giving you events to analyze. There is no way that you will be able to fall asleep tonight",
+        "effect":0
+      }
+    ],
+    "tileType":1
+  },
+  {
+    "description":"The end tile",
+    "symbolEffects":[],
+    "tileType":4
+  }
+]

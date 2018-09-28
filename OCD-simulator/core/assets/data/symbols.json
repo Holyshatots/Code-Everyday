@@ -1,0 +1,57 @@
+[
+  {
+    "symbol":1,
+    "imageName":"glyphicons-54-alarm-inv.png",
+    "description": "Punctuality compulsion. Must adhere to a strict routine with no deviation."
+  },
+  {
+    "symbol":2,
+    "imageName":"glyphicons-678-open-water-inv.png",
+    "description": "Hygenic Obsession. Everything about you must be perfectly clean"
+  },
+  {
+    "symbol":3,
+    "imageName":"glyphicons-157-show-thumbnails-inv.png",
+    "description": "Order compulsion. Everything has it’s own specific place."
+  },
+  {
+    "symbol":4
+    "imageName":"glyphicons-4-user-inv.png",
+    "description":"People"
+  },
+  {
+    "symbol":5,
+    "imageName":"glyphicons-25-parents-inv.png",
+    "description":"Everyone"
+  },
+  {
+    "symbol":4,
+    "imageName":"glyphicons-681-door-inv.png",
+    "description": "You are afraid that every time you leave home or work that you forget to lock up."
+  },
+  {
+    "symbol":6,
+    "imageName":"glyphicons-13-heart-inv.png",
+    "description":"This would represent the character constantly checking in on their family to make sure that they are okay."
+  },
+  {
+    "symbol":7,
+    "imageName":"glyphicons-542-cat-inv.png",
+    "description":"This would represent their superstitions and luck. They will automatically feel scared or nervous if they would step on a crack, go under a ladder, etc."
+  },
+  {
+    "symbol":8,
+    "imageName":"glyphicons-84-random-inv.png",
+    "description":"This would represent the character’s mind and what kind of thoughts are going through their head like: where they would review events to make sure that no harm comes to self and others. They could also be counting while performing a task and make sure that they would end on a “safe” number."
+  },
+  {
+    "symbol":9,
+    "imageName":"glyphicons-52-eye-open-inv.png",
+    "description":"This would represent the amount of excessive checking that they character would do, they would check if they did/did not harm anybody, check if they did/ did not harm themselves, and check if they did not make a mistake, and then they would check their physical parts to know if they are okay."
+  },
+  {
+    "symbol":10,
+    "imageName":"glyphicons-17-bin-inv.png",
+    "description":"This would represent the character being a hoarder because they feel that if they throw anything away then something bad would happen. So this brings the character to keeping useless things or things that don’t have any value."
+  }
+]

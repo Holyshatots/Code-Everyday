@@ -1,0 +1,34 @@
+[
+  {
+    "description": "You take 5 minutes to do your stress ritual that you and your therapist came up with. You determined that by thought stopping, or doing something to take your mind off of the obsession or compulsion, you can sometimes overlook your obsessions or compulsions, or deal with them with reduced stress.",
+    "effect":3
+  },
+  {
+    "description":"As documented by Massimo Pasquini, some OCD sufferers experience little to no mental fatigue. You happen to be someone who is experiences this form of OCD and thusly are able to complete more in the day despite your obsessions and compulsions.",
+    "effect":5
+  },
+  {
+    "description":"With many forms of OCD a main stressor is anxiety. You just happened to switch your anti-anxiety medication from Prozac to Zoloft. This change has made a huge difference for you and makes your daily routine much easier.",
+    "effect":3
+  },
+  {
+    "description": "Lately, you have began to notice how much daily clutter and general disorganization bothers you. Like many OCD sufferers you begin to show the effects of additional late-onset OCD symptoms.",
+    "effect":4
+  },
+  {
+    "description":"The crippling stress you experience daily begins to overwhelm you more than normal. You sprint to the bathroom, and the terrifying idea of self harm that you often feel take over your thoughts.",
+    "effect":6
+  },
+  {
+    "description":"You could go on a run/ jog.",
+    "effect":3
+  },
+  {
+    "description":"Do something that you enjoy for 15 minutes.",
+    "effect":3
+  },
+  {
+    "description":"Write down your thoughts and feelings.",
+    "effect":3
+  }
+]
