@@ -1,0 +1,1 @@
+/usr/bin/c++  -g   CMakeFiles/pizza_c.dir/main.cpp.o  -o pizza_c 
